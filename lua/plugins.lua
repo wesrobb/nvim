@@ -32,4 +32,5 @@ local plugins = {
     "hrsh7th/vim-vsnip",
     "nvim-lualine/lualine.nvim",
 }
+
 require("lazy").setup(plugins)
