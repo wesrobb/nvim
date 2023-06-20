@@ -280,7 +280,10 @@ cmp.setup.cmdline(':', {
     sources = cmp.config.sources({
         { name = 'path' }
     }, {
-        { name = 'cmdline' }
+        { name = 'cmdline' },
+        option = {
+            ignore_cmds = { 'Man', '!' }
+        }
     })
 })
 
