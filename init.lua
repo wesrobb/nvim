@@ -92,6 +92,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require("lspconfig").zls.setup {}
+require("lspconfig").clangd.setup {}
 require("lspconfig").powershell_es.setup {}
 require("lspconfig").azure_pipelines_ls.setup {}
 require("lspconfig").bicep.setup {}
