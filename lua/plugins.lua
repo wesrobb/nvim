@@ -30,6 +30,7 @@ local plugins = {
     "hrsh7th/nvim-cmp",
     "hrsh7th/cmp-vsnip",
     "hrsh7th/vim-vsnip",
+    "dmitmel/cmp-cmdline-history",
     "nvim-lualine/lualine.nvim",
 }
 
