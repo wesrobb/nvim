@@ -1,3 +1,7 @@
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 require "options"
 require "keymaps"
 require "plugins"
@@ -19,32 +23,31 @@ vim.keymap.set('n', '<leader>f', ts_builtin.find_files, {})
 vim.keymap.set('n', '<leader>s', ts_builtin.grep_string, {})
 
 function vim.getVisualSelection()
-	vim.cmd('noau normal! "vy"')
-	local text = vim.fn.getreg('v')
-	vim.fn.setreg('v', {})
+    vim.cmd('noau normal! "vy"')
+    local text = vim.fn.getreg('v')
+    vim.fn.setreg('v', {})
 
-	text = string.gsub(text, "\n", "")
-	if #text > 0 then
-		return text
-	else
-		return ''
-	end
+    text = string.gsub(text, "\n", "")
+    if #text > 0 then
+        return text
+    else
+        return ''
+    end
 end
-
 
 local keymap = vim.keymap.set
 local ts_opts = { noremap = true, silent = true }
 
 keymap('n', '<leader>g', ':Telescope current_buffer_fuzzy_find<cr>', ts_opts)
 keymap('v', '<leader>g', function()
-	local text = vim.getVisualSelection()
-	ts_builtin.current_buffer_fuzzy_find({ default_text = text })
+    local text = vim.getVisualSelection()
+    ts_builtin.current_buffer_fuzzy_find({ default_text = text })
 end, ts_opts)
 
 keymap('n', '<leader>G', ':Telescope live_grep<cr>', ts_opts)
 keymap('v', '<leader>G', function()
-	local text = vim.getVisualSelection()
-	ts_builtin.live_grep({ default_text = text })
+    local text = vim.getVisualSelection()
+    ts_builtin.live_grep({ default_text = text })
 end, ts_opts)
 
 -- Treesitter
@@ -69,24 +72,24 @@ require("mason-lspconfig").setup({
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-  callback = function(ev)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(ev)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-    -- Buffer local mappings.
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '<leader>fo', function()
-      vim.lsp.buf.format { async = true }
-    end, opts)
-  end,
+        -- Buffer local mappings.
+        -- See `:help vim.lsp.*` for documentation on any of the below functions
+        local opts = { buffer = ev.buf }
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', '<leader>fo', function()
+            vim.lsp.buf.format { async = true }
+        end, opts)
+    end,
 })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -102,7 +105,7 @@ require("lspconfig").lua_ls.setup {
         Lua = {
             diagnostics = {
                 -- Get the language server to recognize the `vim` global
-                globals = {'vim'},
+                globals = { 'vim' },
             },
         },
     },
@@ -127,7 +130,7 @@ if vim.g.neovide then
     end)
     vim.keymap.set("n", "<m-->", function()
         print("here")
-        change_scale_factor(1/1.25)
+        change_scale_factor(1 / 1.25)
     end)
 end
 
@@ -183,8 +186,8 @@ cmp.setup({
         end,
     },
     window = {
-         completion = cmp.config.window.bordered(),
-         documentation = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
     },
     mapping = cmp.mapping.preset.insert({
         ["<C-k>"] = cmp.mapping.select_prev_item(),
@@ -231,15 +234,12 @@ cmp.setup({
         end, { "i", "s" }),
     }),
     sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'vsnip' }, -- For vsnip users.
-        -- { name = 'luasnip' }, -- For luasnip users.
-        -- { name = 'ultisnips' }, -- For ultisnips users.
-        -- { name = 'snippy' }, -- For snippy users.
-    },
-    {
-        { name = 'buffer' },
-    }),
+            { name = 'nvim_lsp' },
+            { name = 'vsnip' }, -- For vsnip users.
+        },
+        {
+            { name = 'buffer' },
+        }),
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
@@ -278,111 +278,146 @@ cmp.setup.cmdline({ '/', '?' }, {
     }
 })
 
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
--- cmp.setup.cmdline(':', {
---     mapping = cmp.mapping.preset.cmdline(),
---     sources = cmp.config.sources({
---         { name = 'path' },
---         { name = 'cmdline_history' },
---     }, {
---         { name = 'cmdline' },
---         option = {
---             ignore_cmds = { 'Man', '!' }
---         }
---     })
--- })
-
 -- lualine
 local status_ok, lualine = pcall(require, "lualine")
 if not status_ok then
-	return
+    return
 end
 
 local hide_in_width = function()
-	return vim.fn.winwidth(0) > 80
+    return vim.fn.winwidth(0) > 80
 end
 
 local diagnostics = {
-	"diagnostics",
-	sources = { "nvim_diagnostic" },
-	sections = { "error", "warn" },
-	symbols = { error = " ", warn = " " },
-	colored = false,
-	update_in_insert = false,
-	always_visible = true,
+    "diagnostics",
+    sources = { "nvim_diagnostic" },
+    sections = { "error", "warn" },
+    symbols = { error = " ", warn = " " },
+    colored = false,
+    update_in_insert = false,
+    always_visible = true,
 }
 
 local diff = {
-	"diff",
-	colored = false,
-	symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
-  cond = hide_in_width
+    "diff",
+    colored = false,
+    symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
+    cond = hide_in_width
 }
 
 local mode = {
-	"mode",
-	fmt = function(str)
-		return "-- " .. str .. " --"
-	end,
+    "mode",
+    fmt = function(str)
+        return "-- " .. str .. " --"
+    end,
 }
 
 local filetype = {
-	"filetype",
-	icons_enabled = false,
-	icon = nil,
+    "filetype",
+    icons_enabled = false,
+    icon = nil,
 }
 
 local branch = {
-	"branch",
-	icons_enabled = true,
-	icon = "",
+    "branch",
+    icons_enabled = true,
+    icon = "",
 }
 
 local location = {
-	"location",
-	padding = 0,
+    "location",
+    padding = 0,
 }
 
 -- cool function for progress
 local progress = function()
-	local current_line = vim.fn.line(".")
-	local total_lines = vim.fn.line("$")
-	local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
-	local line_ratio = current_line / total_lines
-	local index = math.ceil(line_ratio * #chars)
-	return chars[index]
+    local current_line = vim.fn.line(".")
+    local total_lines = vim.fn.line("$")
+    local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
+    local line_ratio = current_line / total_lines
+    local index = math.ceil(line_ratio * #chars)
+    return chars[index]
 end
 
 local spaces = function()
-	return "spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth")
+    return "spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth")
 end
 
 lualine.setup({
-	options = {
-		icons_enabled = true,
-		theme = "auto",
-		component_separators = { left = "", right = "" },
-		section_separators = { left = "", right = "" },
-		disabled_filetypes = { "alpha", "dashboard", "NvimTree", "Outline" },
-		always_divide_middle = true,
-	},
-	sections = {
-		lualine_a = { branch, diagnostics },
-		lualine_b = { mode },
-		lualine_c = {},
-		-- lualine_x = { "encoding", "fileformat", "filetype" },
-		lualine_x = { diff, spaces, "encoding", filetype },
-		lualine_y = { location },
-		lualine_z = { progress },
-	},
-	inactive_sections = {
-		lualine_a = {},
-		lualine_b = {},
-		lualine_c = { "filename" },
-		lualine_x = { "location" },
-		lualine_y = {},
-		lualine_z = {},
-	},
-	tabline = {},
-	extensions = {},
+    options = {
+        icons_enabled = true,
+        theme = "auto",
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+        disabled_filetypes = { "alpha", "dashboard", "NvimTree", "Outline" },
+        always_divide_middle = true,
+    },
+    sections = {
+        lualine_a = { branch, diagnostics },
+        lualine_b = { mode },
+        lualine_c = {},
+        -- lualine_x = { "encoding", "fileformat", "filetype" },
+        lualine_x = { diff, spaces, "encoding", filetype },
+        lualine_y = { location },
+        lualine_z = { progress },
+    },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { "filename" },
+        lualine_x = { "location" },
+        lualine_y = {},
+        lualine_z = {},
+    },
+    tabline = {},
+    extensions = {},
 })
+
+-- nvim-tree
+require("nvim-tree").setup({
+    update_focused_file = {
+      enable = true,
+    },
+    renderer = {
+      icons = {
+        glyphs = {
+          default = "",
+          symlink = "",
+          folder = {
+            arrow_open = "",
+            arrow_closed = "",
+            default = "",
+            open = "",
+            empty = "",
+            empty_open = "",
+            symlink = "",
+            symlink_open = "",
+          },
+          git = {
+            unstaged = "",
+            staged = "S",
+            unmerged = "",
+            renamed = "➜",
+            untracked = "U",
+            deleted = "",
+            ignored = "◌",
+          },
+        },
+      },
+    },
+    diagnostics = {
+      enable = true,
+      show_on_dirs = true,
+      icons = {
+        hint = "󰌵",
+        info = "",
+        warning = "",
+        error = "",
+      },
+    },
+    view = {
+      width = 30,
+      side = "left",
+    },
+})
+keymap("n", "<leader>e", ":NvimTreeToggle<CR>", { silent = true})
