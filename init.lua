@@ -107,10 +107,13 @@ require("lspconfig").lua_ls.setup {
         },
     },
 }
+require("lspconfig").omnisharp.setup {}
 
 -- Neovide
-if vim.g.neovide then
+if vim.g.neovide or vim.g.nvy then
     vim.o.guifont = "JetBrainsMono NFM:h14"
+end
+if vim.g.neovide then
     vim.g.neovide_cursor_animation_length = 0.05
     vim.g.neovide_cursor_trail_size = 0.6
 
@@ -276,18 +279,18 @@ cmp.setup.cmdline({ '/', '?' }, {
 })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' },
-        { name = 'cmdline_history' },
-    }, {
-        { name = 'cmdline' },
-        option = {
-            ignore_cmds = { 'Man', '!' }
-        }
-    })
-})
+-- cmp.setup.cmdline(':', {
+--     mapping = cmp.mapping.preset.cmdline(),
+--     sources = cmp.config.sources({
+--         { name = 'path' },
+--         { name = 'cmdline_history' },
+--     }, {
+--         { name = 'cmdline' },
+--         option = {
+--             ignore_cmds = { 'Man', '!' }
+--         }
+--     })
+-- })
 
 -- lualine
 local status_ok, lualine = pcall(require, "lualine")
