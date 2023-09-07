@@ -21,6 +21,7 @@ require("telescope").setup({
 local ts_builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', ts_builtin.find_files, {})
 vim.keymap.set('n', '<leader>s', ts_builtin.grep_string, {})
+vim.keymap.set('n', '<leader>b', ts_builtin.buffers, {})
 
 function vim.getVisualSelection()
     vim.cmd('noau normal! "vy"')
@@ -234,12 +235,13 @@ cmp.setup({
         end, { "i", "s" }),
     }),
     sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'vsnip' }, -- For vsnip users.
-        },
-        {
-            { name = 'buffer' },
-        }),
+        { name = 'copilot' },
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' }, -- For vsnip users.
+    },
+    {
+        { name = 'buffer' },
+    }),
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
@@ -247,6 +249,7 @@ cmp.setup({
             -- vim_item.kind = string.format("%s", kind_icons[vim_item.kind]) -- This shows kind icon only
             vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
             vim_item.menu = ({
+                copilot = "[Copilot]",
                 nvim_lsp = "[LSP]",
                 luasnip = "[Snippet]",
                 buffer = "[Buffer]",

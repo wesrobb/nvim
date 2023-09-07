@@ -16,7 +16,7 @@ local plugins = {
     "nvim-tree/nvim-web-devicons",
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
-    {'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    {"nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
@@ -32,6 +32,29 @@ local plugins = {
     "hrsh7th/vim-vsnip",
     "nvim-lualine/lualine.nvim",
     "nvim-tree/nvim-tree.lua",
+    {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup({
+                suggestion = {
+                    enabled = false
+                },
+                panel =
+                {
+                    enabled = false
+                }
+            })
+        end,
+    },
+    {
+        "zbirenbaum/copilot-cmp",
+          after = { "copilot.lua" },
+          config = function ()
+            require("copilot_cmp").setup()
+          end
+    }
 }
 
 require("lazy").setup(plugins)
