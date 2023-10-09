@@ -13,6 +13,12 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
     { "ellisonleao/gruvbox.nvim", priority = 1000 },
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {},
+    },
     "nvim-tree/nvim-web-devicons",
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
