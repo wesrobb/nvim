@@ -159,6 +159,9 @@ vim.keymap.set('n', '-', function()
     require('mini.files').open()
 end, { desc = 'Open file explorer' })
 
+-- Jump to definition (same as C-])
+vim.keymap.set('n', 'gd', '<C-]>', { desc = 'Jump to definition' })
+
 -- Terminal keybindings
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
