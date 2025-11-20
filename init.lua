@@ -15,6 +15,15 @@ require('mason-tool-installer').setup({
     }
 })
 
+-- Configure diagnostics to show virtual text
+vim.diagnostic.config({
+    virtual_lines = true,
+    signs = true,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = true,
+})
+
 vim.lsp.config('lua_ls', {
     settings = {
         Lua = {
