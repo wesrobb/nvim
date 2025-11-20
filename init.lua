@@ -14,6 +14,8 @@ vim.pack.add {
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-refactor' },
     { src = 'https://github.com/folke/tokyonight.nvim' },
     { src = 'https://github.com/nvim-mini/mini.files' },
+    { src = 'https://github.com/folke/which-key.nvim' },
+    { src = 'https://github.com/numToStr/Comment.nvim' },
 }
 
 -- Setup colorscheme
@@ -139,6 +141,12 @@ require('treesitter-context').setup({
     max_lines = 3,
     trim_scope = 'outer',
 })
+
+-- Setup which-key
+require('which-key').setup()
+
+-- Setup Comment.nvim
+require('Comment').setup()
 
 -- Setup mini.files
 require('mini.files').setup()
