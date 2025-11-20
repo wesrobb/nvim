@@ -154,7 +154,7 @@ vim.keymap.set('n', '<leader>b', function()
     else
         build_cmd = './build.sh'
     end
-    vim.cmd('split | terminal ' .. build_cmd)
+    vim.cmd('botright split | terminal ' .. build_cmd)
 end, { desc = 'Run build script' })
 
 vim.lsp.config('lua_ls', {
