@@ -9,6 +9,7 @@ vim.pack.add {
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-refactor' },
     { src = 'https://github.com/folke/tokyonight.nvim' },
+    { src = 'https://github.com/nvim-mini/mini.files' },
 }
 
 -- Setup colorscheme
@@ -134,6 +135,12 @@ require('treesitter-context').setup({
     max_lines = 3,
     trim_scope = 'outer',
 })
+
+-- Setup mini.files
+require('mini.files').setup()
+vim.keymap.set('n', '-', function()
+    require('mini.files').open()
+end, { desc = 'Open file explorer' })
 
 vim.lsp.config('lua_ls', {
     settings = {
