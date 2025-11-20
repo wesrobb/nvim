@@ -2,6 +2,17 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Basic editor options
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.signcolumn = 'yes'
+vim.o.termguicolors = true
+vim.o.wrap = false
+vim.o.tabstop = 4
+vim.o.swapfile = false
+vim.o.winborder = 'rounded'
+vim.o.clipboard = 'unnamedplus'
+
 -- Set PowerShell as the default shell on Windows
 if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
     vim.o.shell = 'pwsh'
@@ -22,7 +33,7 @@ vim.pack.add {
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-refactor' },
-    { src = 'https://github.com/folke/tokyonight.nvim' },
+    { src = 'https://github.com/vague2k/vague.nvim' },
     { src = 'https://github.com/nvim-mini/mini.files' },
     { src = 'https://github.com/folke/which-key.nvim' },
     { src = 'https://github.com/numToStr/Comment.nvim' },
@@ -30,14 +41,9 @@ vim.pack.add {
 }
 
 -- Setup colorscheme
-require('tokyonight').setup({
-    style = 'night',  -- Options: 'storm', 'moon', 'night', 'day'
-    transparent = false,
-    styles = {
-        comments = { italic = true },
-    },
-})
-vim.cmd.colorscheme('tokyonight')
+require('vague').setup({ transparent = true })
+vim.cmd('colorscheme vague')
+vim.cmd(':hi statusline guibg=NONE')
 
 require('mason').setup()
 require('mason-lspconfig').setup()
@@ -161,6 +167,9 @@ end, { desc = 'Open file explorer' })
 
 -- Jump to definition (same as C-])
 vim.keymap.set('n', 'gd', '<C-]>', { desc = 'Jump to definition' })
+
+-- Show diagnostic in float
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic in float' })
 
 -- Terminal keybindings
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
