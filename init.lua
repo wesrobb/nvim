@@ -38,12 +38,30 @@ vim.pack.add {
     { src = 'https://github.com/folke/which-key.nvim' },
     { src = 'https://github.com/numToStr/Comment.nvim' },
     { src = 'https://github.com/tpope/vim-fugitive' },
+    { src = 'https://github.com/nvim-telescope/telescope.nvim' },
+    { src = 'https://github.com/nvim-lua/plenary.nvim' },
 }
 
 -- Setup colorscheme
 require('vague').setup({ transparent = true })
 vim.cmd('colorscheme vague')
 vim.cmd(':hi statusline guibg=NONE')
+
+-- Setup Telescope
+require('telescope').setup({
+    defaults = {
+        mappings = {
+            i = {
+                ['<C-u>'] = false,
+                ['<C-d>'] = false,
+            },
+        },
+    },
+})
+
+vim.keymap.set('n', '<leader>f', require('telescope.builtin').find_files, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>g', require('telescope.builtin').live_grep, { desc = 'Live grep' })
+vim.keymap.set('n', '<leader>h', require('telescope.builtin').help_tags, { desc = 'Find help' })
 
 require('mason').setup()
 require('mason-lspconfig').setup()
