@@ -171,17 +171,18 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 -- Configure makeprg
 if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
     vim.o.makeprg = 'pwsh -File build.ps1'
-    -- MSVC error format
-    vim.o.errorformat = '%f(%l\\,%c): %t%*[^:]: %m,%f(%l): %t%*[^:]: %m'
+    -- MSVC error format with catch-all for non-error lines
+    vim.o.errorformat = '%f(%l\\,%c): %t%*[^:]: %m,%f(%l): %t%*[^:]: %m,%+G%.%#'
 else
     vim.o.makeprg = './build.sh'
-    -- Use default errorformat for gcc/clang
+    -- Use default errorformat for gcc/clang with catch-all
+    vim.o.errorformat = vim.o.errorformat .. ',%+G%.%#'
 end
 
 -- Build keybinding
 vim.keymap.set('n', '<leader>b', function()
     vim.cmd('make')
-    vim.cmd('botright cwindow')
+    vim.cmd('botright copen')
 end, { desc = 'Run build script and show errors' })
 
 -- Run keybinding
