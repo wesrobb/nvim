@@ -2,6 +2,16 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Set PowerShell as the default shell on Windows
+if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+    vim.o.shell = 'pwsh'
+    vim.o.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+    vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+    vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+    vim.o.shellquote = ''
+    vim.o.shellxquote = ''
+end
+
 vim.pack.add {
     { src = 'https://github.com/neovim/nvim-lspconfig' },
     { src = 'https://github.com/mason-org/mason.nvim' },
@@ -155,16 +165,24 @@ vim.keymap.set('n', '-', function()
     require('mini.files').open()
 end, { desc = 'Open file explorer' })
 
+-- Terminal keybindings
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- Configure makeprg
+if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+    vim.o.makeprg = 'pwsh -File build.ps1'
+    -- MSVC error format
+    vim.o.errorformat = '%f(%l\\,%c): %t%*[^:]: %m,%f(%l): %t%*[^:]: %m'
+else
+    vim.o.makeprg = './build.sh'
+    -- Use default errorformat for gcc/clang
+end
+
 -- Build keybinding
 vim.keymap.set('n', '<leader>b', function()
-    local build_cmd
-    if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
-        build_cmd = 'pwsh -File build.ps1'
-    else
-        build_cmd = './build.sh'
-    end
-    vim.cmd('botright split | terminal ' .. build_cmd)
-end, { desc = 'Run build script' })
+    vim.cmd('make')
+    vim.cmd('botright cwindow')
+end, { desc = 'Run build script and show errors' })
 
 -- Run keybinding
 vim.keymap.set('n', '<leader>r', function()
