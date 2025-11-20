@@ -16,6 +16,7 @@ vim.pack.add {
     { src = 'https://github.com/nvim-mini/mini.files' },
     { src = 'https://github.com/folke/which-key.nvim' },
     { src = 'https://github.com/numToStr/Comment.nvim' },
+    { src = 'https://github.com/tpope/vim-fugitive' },
 }
 
 -- Setup colorscheme
