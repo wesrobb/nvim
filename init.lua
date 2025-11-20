@@ -62,6 +62,8 @@ require('telescope').setup({
 vim.keymap.set('n', '<leader>f', require('telescope.builtin').find_files, { desc = 'Find files' })
 vim.keymap.set('n', '<leader>g', require('telescope.builtin').live_grep, { desc = 'Live grep' })
 vim.keymap.set('n', '<leader>h', require('telescope.builtin').help_tags, { desc = 'Find help' })
+vim.keymap.set('n', '<leader>s', require('telescope.builtin').lsp_document_symbols, { desc = 'Find symbols' })
+vim.keymap.set('n', '<leader>*', require('telescope.builtin').grep_string, { desc = 'Grep word under cursor' })
 
 require('mason').setup()
 require('mason-lspconfig').setup()
