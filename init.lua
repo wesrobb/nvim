@@ -1,3 +1,7 @@
+-- Set leader key to space
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 vim.pack.add {
     { src = 'https://github.com/neovim/nvim-lspconfig' },
     { src = 'https://github.com/mason-org/mason.nvim' },
@@ -141,6 +145,17 @@ require('mini.files').setup()
 vim.keymap.set('n', '-', function()
     require('mini.files').open()
 end, { desc = 'Open file explorer' })
+
+-- Build keybinding
+vim.keymap.set('n', '<leader>b', function()
+    local build_cmd
+    if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+        build_cmd = 'pwsh -File build.ps1'
+    else
+        build_cmd = './build.sh'
+    end
+    vim.cmd('split | terminal ' .. build_cmd)
+end, { desc = 'Run build script' })
 
 vim.lsp.config('lua_ls', {
     settings = {
