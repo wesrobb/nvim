@@ -157,6 +157,17 @@ vim.keymap.set('n', '<leader>b', function()
     vim.cmd('botright split | terminal ' .. build_cmd)
 end, { desc = 'Run build script' })
 
+-- Run keybinding
+vim.keymap.set('n', '<leader>r', function()
+    local run_cmd
+    if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+        run_cmd = 'pwsh -File run.ps1'
+    else
+        run_cmd = './run.sh'
+    end
+    vim.cmd('botright split | terminal ' .. run_cmd)
+end, { desc = 'Run application' })
+
 vim.lsp.config('lua_ls', {
     settings = {
         Lua = {
