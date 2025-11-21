@@ -105,6 +105,10 @@ require('blink.cmp').setup({
 -- Setup treesitter
 require('nvim-treesitter.configs').setup({
     ensure_installed = { 'c', 'lua' },
+    sync_install = false,
+    auto_install = true,
+    ignore_install = {},
+    modules = {},
     highlight = {
         enable = true,
     },
@@ -188,8 +192,14 @@ end, { desc = 'Open file explorer' })
 -- Jump to definition (same as C-])
 vim.keymap.set('n', 'gd', '<C-]>', { desc = 'Jump to definition' })
 
--- Show diagnostic in float
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic in float' })
+-- Show diagnostic in float and copy to clipboard
+vim.keymap.set('n', '<leader>e', function()
+    local diags = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
+    if #diags > 0 then
+        vim.fn.setreg('+', diags[1].message)
+    end
+    vim.diagnostic.open_float()
+end, { desc = 'Show diagnostic in float and copy' })
 
 -- Terminal keybindings
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
