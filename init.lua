@@ -71,7 +71,7 @@ require('mason-tool-installer').setup({
     ensure_installed = {
         "lua_ls",
         "stylua",
-	"clangd",
+		"clangd",
     }
 })
 
@@ -104,7 +104,7 @@ require('blink.cmp').setup({
 
 -- Setup treesitter
 require('nvim-treesitter.configs').setup({
-    ensure_installed = { 'c', 'lua' },
+    ensure_installed = { 'c', 'cpp', 'lua' },
     sync_install = false,
     auto_install = true,
     ignore_install = {},
