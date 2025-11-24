@@ -40,6 +40,7 @@ vim.pack.add {
     { src = 'https://github.com/tpope/vim-fugitive' },
     { src = 'https://github.com/nvim-telescope/telescope.nvim' },
     { src = 'https://github.com/nvim-lua/plenary.nvim' },
+    { src = 'https://github.com/rachartier/tiny-inline-diagnostic.nvim' },
 }
 
 -- Setup colorscheme
@@ -75,9 +76,12 @@ require('mason-tool-installer').setup({
     }
 })
 
--- Configure diagnostics to show virtual text
+-- Setup tiny-inline-diagnostic (must be before vim.diagnostic.config)
+require('tiny-inline-diagnostic').setup()
+
+-- Configure diagnostics
 vim.diagnostic.config({
-    virtual_lines = true,
+    virtual_lines = false,  -- Disabled because tiny-inline-diagnostic handles this
     signs = true,
     underline = true,
     update_in_insert = false,
@@ -99,6 +103,11 @@ require('blink.cmp').setup({
     },
     sources = {
         default = { 'lsp', 'path', 'buffer' },
+    },
+	completion = {
+		list = {
+		    selection = { preselect = false }
+		}
     },
 })
 
@@ -209,6 +218,39 @@ end, { desc = 'Show diagnostics in quickfix' })
 
 -- Terminal keybindings
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<C-t>', '<C-\\><C-n>:lua vim.api.nvim_win_close(0, false)<CR>', { desc = 'Close terminal' })
+
+-- Toggle terminal
+vim.keymap.set('n', '<C-t>', function()
+    local term_buf = nil
+    local term_win = nil
+
+    -- Find existing terminal buffer and window
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buftype == 'terminal' then
+            term_buf = buf
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_get_buf(win) == buf then
+                    term_win = win
+                    break
+                end
+            end
+            break
+        end
+    end
+
+    if term_win then
+        -- Terminal window is open, close it
+        vim.api.nvim_win_close(term_win, false)
+    elseif term_buf then
+        -- Terminal buffer exists but is hidden, show it
+        vim.cmd('botright split')
+        vim.api.nvim_win_set_buf(0, term_buf)
+    else
+        -- No terminal exists, create a new one
+        vim.cmd('botright split | terminal')
+    end
+end, { desc = 'Toggle terminal' })
 
 -- Configure makeprg
 if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then

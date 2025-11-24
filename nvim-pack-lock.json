@@ -60,6 +60,10 @@
       "rev": "83a3a713d6b2d2a408491a1b959e55a7fa8678e8",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
+    "tiny-inline-diagnostic.nvim": {
+      "rev": "71f998696a4d63a1fa42a6c70d5931a2001e485b",
+      "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
+    },
     "tokyonight.nvim": {
       "rev": "5da1b76e64daf4c5d410f06bcb6b9cb640da7dfd",
       "src": "https://github.com/folke/tokyonight.nvim"
