@@ -201,6 +201,12 @@ vim.keymap.set('n', '<leader>e', function()
     vim.diagnostic.open_float()
 end, { desc = 'Show diagnostic in float and copy' })
 
+-- Show diagnostics in quickfix list
+vim.keymap.set('n', '<leader>d', function()
+    vim.diagnostic.setqflist()
+    vim.cmd('botright copen')
+end, { desc = 'Show diagnostics in quickfix' })
+
 -- Terminal keybindings
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
