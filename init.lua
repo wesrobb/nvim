@@ -283,8 +283,41 @@ vim.keymap.set('n', '<leader>r', function()
     else
         run_cmd = './run.sh'
     end
+
+    local term_buf = nil
+    local term_win = nil
+
+    -- Find existing terminal buffer and window
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buftype == 'terminal' then
+            term_buf = buf
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_get_buf(win) == buf then
+                    term_win = win
+                    break
+                end
+            end
+            break
+        end
+    end
+
+    if term_win then
+        -- Terminal window exists, close it and open a new one
+        vim.api.nvim_win_close(term_win, false)
+    end
+    if term_buf then
+        -- Delete old terminal buffer
+        vim.api.nvim_buf_delete(term_buf, { force = true })
+    end
+
+    -- Create new terminal with run command
     vim.cmd('botright split | terminal ' .. run_cmd)
 end, { desc = 'Run application' })
+
+-- Keybinding for clangd switch source/header
+vim.keymap.set('n', '<leader>a', function()
+    vim.cmd('LspClangdSwitchSourceHeader')
+end, { desc = 'Switch between source and header' })
 
 vim.lsp.config('lua_ls', {
     settings = {
