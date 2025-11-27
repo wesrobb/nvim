@@ -41,6 +41,7 @@ vim.pack.add {
     { src = 'https://github.com/nvim-telescope/telescope.nvim' },
     { src = 'https://github.com/nvim-lua/plenary.nvim' },
     { src = 'https://github.com/rachartier/tiny-inline-diagnostic.nvim' },
+    { src = 'https://github.com/TheLeoP/powershell.nvim' },
 }
 
 -- Setup colorscheme
@@ -298,4 +299,9 @@ vim.lsp.config('lua_ls', {
             },
         },
     },
+})
+
+-- Setup powershell.nvim
+require('powershell').setup({
+    bundle_path = vim.fn.stdpath('data') .. '/mason/packages/powershell-editor-services',
 })
