@@ -12,6 +12,10 @@ vim.o.tabstop = 4
 vim.o.swapfile = false
 vim.o.winborder = 'rounded'
 vim.o.clipboard = 'unnamedplus'
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.incsearch = true
+vim.o.inccommand = 'nosplit'
 
 -- Set PowerShell as the default shell on Windows
 if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
