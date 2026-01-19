@@ -27,24 +27,6 @@ if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
     vim.o.shellxquote = ''
 end
 
--- Handle plugin build hooks
-vim.api.nvim_create_autocmd('PackChanged', {
-    callback = function(ev)
-        local name, kind = ev.data.spec.name, ev.data.kind
-        if name == 'peek.nvim' and (kind == 'install' or kind == 'update') then
-            vim.system({ 'deno', 'task', 'build' }, { cwd = ev.data.path }, function(obj)
-                vim.schedule(function()
-                    if obj.code == 0 then
-                        vim.notify('peek.nvim build complete!', vim.log.levels.INFO)
-                    else
-                        vim.notify('peek.nvim build failed: ' .. (obj.stderr or ''), vim.log.levels.ERROR)
-                    end
-                end)
-            end)
-        end
-    end
-})
-
 vim.pack.add {
     { src = 'https://github.com/neovim/nvim-lspconfig' },
     { src = 'https://github.com/mason-org/mason.nvim' },
@@ -64,7 +46,8 @@ vim.pack.add {
     { src = 'https://github.com/nvim-lua/plenary.nvim' },
     { src = 'https://github.com/rachartier/tiny-inline-diagnostic.nvim' },
     { src = 'https://github.com/TheLeoP/powershell.nvim' },
-    { src = 'https://github.com/toppair/peek.nvim' },
+    { src = 'https://github.com/brianhuster/live-preview.nvim' },
+    { src = 'https://github.com/MeanderingProgrammer/render-markdown.nvim' },
 }
 
 -- Setup colorscheme
@@ -362,15 +345,8 @@ require('powershell').setup({
     bundle_path = vim.fn.stdpath('data') .. '/mason/packages/powershell-editor-services',
 })
 
--- Setup peek.nvim for markdown preview
-require('peek').setup({
-    auto_load = true,
-    close_on_bdelete = true,
-    syntax = true,
-    theme = 'dark',
-    update_on_change = true,
-    app = 'browser',
-})
+-- Setup live-preview.nvim for markdown preview
+require('live-preview').setup()
 
-vim.keymap.set('n', '<leader>po', require('peek').open, { desc = 'Peek open markdown preview' })
-vim.keymap.set('n', '<leader>pc', require('peek').close, { desc = 'Peek close markdown preview' })
+vim.keymap.set('n', '<leader>po', ':LivePreview start<CR>', { desc = 'Start live preview' })
+vim.keymap.set('n', '<leader>pc', ':LivePreview close<CR>', { desc = 'Close live preview' })

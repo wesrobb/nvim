@@ -8,6 +8,10 @@
       "rev": "73ea297bc665c936b51797d5a55599536ffee0d8",
       "src": "https://github.com/saghen/blink.cmp"
     },
+    "live-preview.nvim": {
+      "rev": "5f517e80c1ca734a2bd6ace2115b36c51464f7e9",
+      "src": "https://github.com/brianhuster/live-preview.nvim"
+    },
     "mason-lspconfig.nvim": {
       "rev": "7d527c76c43f46294de9c19d39c5a86317809b4b",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
@@ -55,6 +59,10 @@
     "powershell.nvim": {
       "rev": "f7a45f9c0b16e22e938b85a6729dc41165d87c95",
       "src": "https://github.com/TheLeoP/powershell.nvim"
+    },
+    "render-markdown.nvim": {
+      "rev": "b2b135347e299ffbf7f4123fb7811899b0c9f4b8",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "telescope.nvim": {
       "rev": "83a3a713d6b2d2a408491a1b959e55a7fa8678e8",
