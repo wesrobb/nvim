@@ -1,0 +1,7 @@
+{
+  "Action Item": {
+    "prefix": "ai",
+    "body": ["- [ ] $0"],
+    "description": "Insert a markdown action item"
+  }
+}

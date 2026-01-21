@@ -110,7 +110,7 @@ require('blink.cmp').setup({
         ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
     },
     sources = {
-        default = { 'lsp', 'path', 'buffer' },
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
 	completion = {
 		list = {
