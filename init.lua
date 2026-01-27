@@ -350,3 +350,17 @@ require('live-preview').setup()
 
 vim.keymap.set('n', '<leader>po', ':LivePreview start<CR>', { desc = 'Start live preview' })
 vim.keymap.set('n', '<leader>pc', ':LivePreview close<CR>', { desc = 'Close live preview' })
+
+-- Toggle markdown action item checkbox
+vim.keymap.set('n', '<leader>x', function()
+    local line = vim.api.nvim_get_current_line()
+    local new_line
+    if line:match('%- %[ %]') then
+        new_line = line:gsub('%- %[ %]', '- [x]', 1)
+    elseif line:match('%- %[x%]') then
+        new_line = line:gsub('%- %[x%]', '- [ ]', 1)
+    else
+        return
+    end
+    vim.api.nvim_set_current_line(new_line)
+end, { desc = 'Toggle action item checkbox' })
