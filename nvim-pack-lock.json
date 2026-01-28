@@ -4,9 +4,17 @@
       "rev": "e30b7f2008e52442154b66f7c519bfd2f1e32acb",
       "src": "https://github.com/numToStr/Comment.nvim"
     },
+    "blink-cmp-copilot": {
+      "rev": "439cff78780c033aa23cf061d7315314b347e3c1",
+      "src": "https://github.com/giuxtaposition/blink-cmp-copilot"
+    },
     "blink.cmp": {
       "rev": "73ea297bc665c936b51797d5a55599536ffee0d8",
       "src": "https://github.com/saghen/blink.cmp"
+    },
+    "copilot.lua": {
+      "rev": "2ede0808fa8dace39ea2a0f09b7bc6583655b730",
+      "src": "https://github.com/zbirenbaum/copilot.lua"
     },
     "live-preview.nvim": {
       "rev": "5f517e80c1ca734a2bd6ace2115b36c51464f7e9",

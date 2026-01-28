@@ -33,6 +33,7 @@ vim.pack.add {
     { src = 'https://github.com/mason-org/mason-lspconfig.nvim' },
     { src = 'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim' },
     { src = 'https://github.com/saghen/blink.cmp', checkout = 'v1.8.0' },
+    { src = 'https://github.com/zbirenbaum/copilot.lua' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
@@ -96,8 +97,35 @@ vim.diagnostic.config({
     severity_sort = true,
 })
 
--- Setup blink.cmp
+-- Completion mode: 'copilot' or 'blink' (default to copilot)
+vim.g.completion_mode = 'copilot'
+
+-- Setup copilot.lua
+require('copilot').setup({
+    suggestion = {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+            accept = '<Tab>',
+            accept_word = false,
+            accept_line = false,
+            next = '<M-]>',
+            prev = '<M-[>',
+            dismiss = '<C-]>',
+        },
+    },
+    panel = { enabled = false },
+    filetypes = {
+        markdown = true,
+        ['.'] = true,
+    },
+})
+
+-- Setup blink.cmp (disabled by default since copilot is default)
 require('blink.cmp').setup({
+    enabled = function()
+        return vim.g.completion_mode == 'blink'
+    end,
     keymap = {
         preset = 'default',
         ['<C-space>'] = { 'show', 'hide' },
@@ -112,12 +140,26 @@ require('blink.cmp').setup({
     sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
-	completion = {
-		list = {
-		    selection = { preselect = false }
-		}
+    completion = {
+        list = {
+            selection = { preselect = false }
+        }
     },
 })
+
+-- Toggle between copilot and blink completion
+vim.keymap.set('n', '<leader>tc', function()
+    if vim.g.completion_mode == 'copilot' then
+        vim.g.completion_mode = 'blink'
+        require('copilot.suggestion').dismiss()
+        require('copilot.command').disable()
+        print('Completion: blink')
+    else
+        vim.g.completion_mode = 'copilot'
+        require('copilot.command').enable()
+        print('Completion: copilot')
+    end
+end, { desc = 'Toggle completion (copilot/blink)' })
 
 -- Setup treesitter
 require('nvim-treesitter.configs').setup({
