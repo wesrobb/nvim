@@ -351,6 +351,112 @@ require('live-preview').setup()
 vim.keymap.set('n', '<leader>po', ':LivePreview start<CR>', { desc = 'Start live preview' })
 vim.keymap.set('n', '<leader>pc', ':LivePreview close<CR>', { desc = 'Close live preview' })
 
+-- Start a new day in plan.md
+vim.keymap.set('n', '<leader>n', function()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+    -- Find "### Today - Day DD-MM-YYYY"
+    local today_idx
+    local old_day, old_date
+    for i, line in ipairs(lines) do
+        old_day, old_date = line:match('^### Today %- (%a+) (%d+%-%d+%-%d+)')
+        if old_day then
+            today_idx = i
+            break
+        end
+    end
+    if not today_idx then
+        vim.notify('Could not find "### Today" heading', vim.log.levels.ERROR)
+        return
+    end
+
+    -- Find next heading after Today (### sibling or ## parent)
+    local section_end
+    for i = today_idx + 1, #lines do
+        if lines[i]:match('^### ') or lines[i]:match('^## ') then
+            section_end = i
+            break
+        end
+    end
+    section_end = section_end or (#lines + 1)
+
+    -- Parse items: group each top-level item with its sub-lines
+    local completed_lines = {}
+    local incomplete_lines = {}
+    local in_item = false
+    local is_completed = false
+
+    for i = today_idx + 1, section_end - 1 do
+        local line = lines[i]
+        if line:match('^%- %[x%]') then
+            in_item = true
+            is_completed = true
+            table.insert(completed_lines, line)
+        elseif line:match('^%- %[ %]') then
+            in_item = true
+            is_completed = false
+            table.insert(incomplete_lines, line)
+        elseif in_item and line:match('^%s+') then
+            if is_completed then
+                table.insert(completed_lines, line)
+            else
+                table.insert(incomplete_lines, line)
+            end
+        else
+            in_item = false
+        end
+    end
+
+    -- Convert DD-MM-YYYY to YYYY-MM-DD for log heading
+    local dd, mm, yyyy = old_date:match('(%d+)-(%d+)-(%d+)')
+    local log_heading = '### ' .. old_day .. ' ' .. yyyy .. '-' .. mm .. '-' .. dd
+
+    -- New Today heading with current date
+    local new_heading = '### Today - ' .. os.date('%A') .. ' ' .. os.date('%d-%m-%Y')
+
+    -- Replace the Today section (heading through blank lines before next heading)
+    local today_section = { new_heading, '' }
+    for _, line in ipairs(incomplete_lines) do
+        table.insert(today_section, line)
+    end
+    table.insert(today_section, '')
+
+    vim.api.nvim_buf_set_lines(0, today_idx - 1, section_end - 1, false, today_section)
+
+    -- If no completed items, we're done
+    if #completed_lines == 0 then
+        vim.notify('Started a new day!', vim.log.levels.INFO)
+        return
+    end
+
+    -- Re-read buffer and find insertion point after "## Past" heading
+    lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local insert_idx
+    for i, line in ipairs(lines) do
+        if line:match('^## Past') then
+            -- Insert right after "## Past" (and its blank line)
+            insert_idx = i + 1
+            -- Skip blank lines after the heading
+            while insert_idx <= #lines and lines[insert_idx] == '' do
+                insert_idx = insert_idx + 1
+            end
+            break
+        end
+    end
+    insert_idx = insert_idx or (#lines + 1)
+
+    -- Build log entry and insert before existing log entries
+    local log_entry = { log_heading, '' }
+    for _, line in ipairs(completed_lines) do
+        table.insert(log_entry, line)
+    end
+    table.insert(log_entry, '')
+
+    vim.api.nvim_buf_set_lines(0, insert_idx - 1, insert_idx - 1, false, log_entry)
+
+    vim.notify('Started a new day!', vim.log.levels.INFO)
+end, { desc = 'Start a new day in plan' })
+
 -- Toggle markdown action item checkbox
 vim.keymap.set('n', '<leader>x', function()
     local line = vim.api.nvim_get_current_line()
