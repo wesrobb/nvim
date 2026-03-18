@@ -48,8 +48,6 @@ vim.pack.add {
     { src = 'https://github.com/TheLeoP/powershell.nvim' },
     { src = 'https://github.com/brianhuster/live-preview.nvim' },
     { src = 'https://github.com/MeanderingProgrammer/render-markdown.nvim' },
-    { src = 'https://github.com/folke/snacks.nvim' },
-    { src = 'https://github.com/coder/claudecode.nvim' },
 }
 
 -- Setup colorscheme
@@ -472,16 +470,3 @@ vim.keymap.set('n', '<leader>x', function()
     end
     vim.api.nvim_set_current_line(new_line)
 end, { desc = 'Toggle action item checkbox' })
-
--- Setup claudecode.nvim
-require('claudecode').setup()
-
-vim.keymap.set('n', '<leader>cc', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
-vim.keymap.set('n', '<leader>cf', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
-vim.keymap.set('n', '<leader>cr', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
-vim.keymap.set('n', '<leader>ck', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
-vim.keymap.set('n', '<leader>cm', '<cmd>ClaudeCodeSelectModel<cr>', { desc = 'Select Claude model' })
-vim.keymap.set('n', '<leader>cb', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add buffer to Claude' })
-vim.keymap.set('v', '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send selection to Claude' })
-vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = 'Accept Claude diff' })
-vim.keymap.set('n', '<leader>cd', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny Claude diff' })
