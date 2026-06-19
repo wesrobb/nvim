@@ -16,6 +16,7 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.incsearch = true
 vim.o.inccommand = 'nosplit'
+vim.o.guifont = 'JetBrainsMono NF:h12'
 
 -- Set PowerShell as the default shell on Windows
 if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
@@ -48,6 +49,7 @@ vim.pack.add {
     { src = 'https://github.com/TheLeoP/powershell.nvim' },
     { src = 'https://github.com/brianhuster/live-preview.nvim' },
     { src = 'https://github.com/MeanderingProgrammer/render-markdown.nvim' },
+    { src = 'https://github.com/folke/flash.nvim' },
 }
 
 -- Setup colorscheme
@@ -196,6 +198,14 @@ require('treesitter-context').setup({
 
 -- Setup which-key
 require('which-key').setup()
+
+-- Setup flash.nvim
+require('flash').setup()
+vim.keymap.set({ 'n', 'x', 'o' }, 's', function() require('flash').jump() end, { desc = 'Flash' })
+vim.keymap.set({ 'n', 'x', 'o' }, 'S', function() require('flash').treesitter() end, { desc = 'Flash Treesitter' })
+vim.keymap.set('o', 'r', function() require('flash').remote() end, { desc = 'Remote Flash' })
+vim.keymap.set({ 'o', 'x' }, 'R', function() require('flash').treesitter_search() end, { desc = 'Treesitter Search' })
+vim.keymap.set('c', '<C-s>', function() require('flash').toggle() end, { desc = 'Toggle Flash Search' })
 
 -- Setup Comment.nvim
 require('Comment').setup()
