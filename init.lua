@@ -33,7 +33,8 @@ vim.pack.add {
     { src = 'https://github.com/mason-org/mason.nvim' },
     { src = 'https://github.com/mason-org/mason-lspconfig.nvim' },
     { src = 'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim' },
-    { src = 'https://github.com/saghen/blink.cmp', checkout = 'v1.8.0' },
+    { src = 'https://github.com/saghen/blink.lib' },
+    { src = 'https://github.com/saghen/blink.cmp' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
@@ -99,6 +100,7 @@ vim.diagnostic.config({
 })
 
 -- Setup blink.cmp
+require('blink.cmp').build():pwait()
 require('blink.cmp').setup({
     keymap = {
         preset = 'default',
