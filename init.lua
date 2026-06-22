@@ -35,10 +35,9 @@ vim.pack.add {
     { src = 'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim' },
     { src = 'https://github.com/saghen/blink.lib' },
     { src = 'https://github.com/saghen/blink.cmp' },
-    { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
-    { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects' },
+    { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
+    { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects', version = 'main' },
     { src = 'https://github.com/nvim-treesitter/nvim-treesitter-context' },
-    { src = 'https://github.com/nvim-treesitter/nvim-treesitter-refactor' },
     { src = 'https://github.com/vague2k/vague.nvim' },
     { src = 'https://github.com/nvim-mini/mini.files' },
     { src = 'https://github.com/folke/which-key.nvim' },
@@ -123,73 +122,50 @@ require('blink.cmp').setup({
     },
 })
 
--- Setup treesitter
-require('nvim-treesitter.configs').setup({
-    ensure_installed = { 'c', 'cpp', 'lua', 'markdown', 'powershell' },
-    sync_install = false,
-    auto_install = true,
-    ignore_install = {},
-    modules = {},
-    highlight = {
-        enable = true,
-    },
-    indent = {
-        enable = true,
-    },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = '<CR>',
-            node_incremental = '<CR>',
-            scope_incremental = '<TAB>',
-            node_decremental = '<S-TAB>',
-        },
-    },
-    textobjects = {
-        select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-                ['af'] = '@function.outer',
-                ['if'] = '@function.inner',
-                ['ac'] = '@class.outer',
-                ['ic'] = '@class.inner',
-                ['aa'] = '@parameter.outer',
-                ['ia'] = '@parameter.inner',
-            },
-        },
-        move = {
-            enable = true,
-            set_jumps = true,
-            goto_next_start = {
-                [']m'] = '@function.outer',
-                [']c'] = '@class.outer',
-                [']a'] = '@parameter.inner',
-            },
-            goto_next_end = {
-                [']M'] = '@function.outer',
-                [']C'] = '@class.outer',
-                [']A'] = '@parameter.inner',
-            },
-            goto_previous_start = {
-                ['[m'] = '@function.outer',
-                ['[c'] = '@class.outer',
-                ['[a'] = '@parameter.inner',
-            },
-            goto_previous_end = {
-                ['[M'] = '@function.outer',
-                ['[C'] = '@class.outer',
-                ['[A'] = '@parameter.inner',
-            },
-        },
-    },
-    refactor = {
-        highlight_definitions = {
-            enable = true,
-            clear_on_cursor_move = true,
-        },
-    },
+-- Setup treesitter (main branch)
+require('nvim-treesitter').install({
+    'c', 'cpp', 'lua', 'markdown', 'markdown_inline', 'powershell', 'query', 'vim', 'vimdoc',
 })
+
+-- Enable treesitter highlighting and indentation for any installed parser
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function(args)
+        if pcall(vim.treesitter.start, args.buf) then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+    end,
+})
+
+-- Setup treesitter-textobjects (main branch)
+require('nvim-treesitter-textobjects').setup({
+    select = { lookahead = true },
+    move = { set_jumps = true },
+})
+
+local ts_select = require('nvim-treesitter-textobjects.select').select_textobject
+local ts_move = require('nvim-treesitter-textobjects.move')
+
+-- Select textobjects
+vim.keymap.set({ 'x', 'o' }, 'af', function() ts_select('@function.outer', 'textobjects') end, { desc = 'a function' })
+vim.keymap.set({ 'x', 'o' }, 'if', function() ts_select('@function.inner', 'textobjects') end, { desc = 'inner function' })
+vim.keymap.set({ 'x', 'o' }, 'ac', function() ts_select('@class.outer', 'textobjects') end, { desc = 'a class' })
+vim.keymap.set({ 'x', 'o' }, 'ic', function() ts_select('@class.inner', 'textobjects') end, { desc = 'inner class' })
+vim.keymap.set({ 'x', 'o' }, 'aa', function() ts_select('@parameter.outer', 'textobjects') end, { desc = 'a parameter' })
+vim.keymap.set({ 'x', 'o' }, 'ia', function() ts_select('@parameter.inner', 'textobjects') end, { desc = 'inner parameter' })
+
+-- Move between textobjects
+vim.keymap.set({ 'n', 'x', 'o' }, ']m', function() ts_move.goto_next_start('@function.outer', 'textobjects') end, { desc = 'Next function start' })
+vim.keymap.set({ 'n', 'x', 'o' }, ']c', function() ts_move.goto_next_start('@class.outer', 'textobjects') end, { desc = 'Next class start' })
+vim.keymap.set({ 'n', 'x', 'o' }, ']a', function() ts_move.goto_next_start('@parameter.inner', 'textobjects') end, { desc = 'Next parameter start' })
+vim.keymap.set({ 'n', 'x', 'o' }, ']M', function() ts_move.goto_next_end('@function.outer', 'textobjects') end, { desc = 'Next function end' })
+vim.keymap.set({ 'n', 'x', 'o' }, ']C', function() ts_move.goto_next_end('@class.outer', 'textobjects') end, { desc = 'Next class end' })
+vim.keymap.set({ 'n', 'x', 'o' }, ']A', function() ts_move.goto_next_end('@parameter.inner', 'textobjects') end, { desc = 'Next parameter end' })
+vim.keymap.set({ 'n', 'x', 'o' }, '[m', function() ts_move.goto_previous_start('@function.outer', 'textobjects') end, { desc = 'Previous function start' })
+vim.keymap.set({ 'n', 'x', 'o' }, '[c', function() ts_move.goto_previous_start('@class.outer', 'textobjects') end, { desc = 'Previous class start' })
+vim.keymap.set({ 'n', 'x', 'o' }, '[a', function() ts_move.goto_previous_start('@parameter.inner', 'textobjects') end, { desc = 'Previous parameter start' })
+vim.keymap.set({ 'n', 'x', 'o' }, '[M', function() ts_move.goto_previous_end('@function.outer', 'textobjects') end, { desc = 'Previous function end' })
+vim.keymap.set({ 'n', 'x', 'o' }, '[C', function() ts_move.goto_previous_end('@class.outer', 'textobjects') end, { desc = 'Previous class end' })
+vim.keymap.set({ 'n', 'x', 'o' }, '[A', function() ts_move.goto_previous_end('@parameter.inner', 'textobjects') end, { desc = 'Previous parameter end' })
 
 -- Setup treesitter-context
 require('treesitter-context').setup({
